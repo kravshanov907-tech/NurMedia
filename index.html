@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NURMEDIA | ULTRA NEON</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon: #00f2ff;
+            --pink: #ff007a;
+            --bg: #020205;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            background: var(--bg); 
+            color: white; 
+            font-family: 'Orbitron', sans-serif;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 242, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 0, 122, 0.05) 0%, transparent 20%);
+        }
+
+        /* Glitch Effect Logo */
+        .header {
+            padding: 40px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 35px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            color: #fff;
+            text-shadow: 2px 2px var(--pink), -2px -2px var(--neon);
+            animation: glitch 3s infinite;
+        }
+
+        /* Categories Bar */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .tab {
+            padding: 12px 25px;
+            border: 1px solid var(--neon);
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 12px;
+            transition: 0.3s;
+            background: rgba(0, 242, 255, 0.05);
+            color: var(--neon);
+        }
+
+        .tab.active, .tab:hover {
+            background: var(--neon);
+            color: #000;
+            box-shadow: 0 0 20px var(--neon);
+        }
+
+        /* Ultra Movie Grid */
+        .container { padding: 40px; }
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 40px; 
+        }
+
+        /* Hologram Card */
+        .movie-card {
+            position: relative;
+            height: 380px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .movie-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, var(--bg) 10%, transparent 100%);
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            border-color: var(--pink);
+            box-shadow: 0 0 30px rgba(255, 0, 122, 0.3);
+            background: rgba(255, 0, 122, 0.05);
+        }
+
+        /* Animated Hologram Sticker */
+        .sticker-wrapper {
+            font-size: 100px;
+            margin-bottom: 20px;
+            z-index: 2;
+            position: relative;
+            transition: 0.5s;
+        }
+
+        .movie-card:hover .sticker-wrapper {
+            transform: rotateY(180deg) scale(1.2);
+            filter: drop-shadow(0 0 20px var(--pink));
+        }
+
+        .sticker-wrapper::before {
+            content: '';
+            position: absolute;
+            width: 150%; height: 10px;
+            background: var(--neon);
+            bottom: -10px; left: -25%;
+            filter: blur(15px);
+            opacity: 0.5;
+        }
+
+        .movie-info {
+            position: absolute;
+            bottom: 30px;
+            text-align: center;
+            z-index: 3;
+            width: 100%;
+        }
+
+        .movie-title {
+            font-size: 18px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .movie-cat {
+            font-size: 10px;
+            color: var(--neon);
+            font-family: sans-serif;
+            font-weight: bold;
+        }
+
+        /* Play Icon Overlay */
+        .play-overlay {
+            position: absolute;
+            top: 20px; right: 20px;
+            color: var(--pink);
+            font-size: 20px;
+            opacity: 0.5;
+        }
+
+        /* Video Modal */
+        #modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            padding: 50px;
+        }
+
+        .video-box {
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--neon);
+            box-shadow: 0 0 50px var(--neon);
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: -40px; right: 0;
+            color: var(--neon);
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 2px 2px var(--pink), -2px -2px var(--neon); }
+            50% { text-shadow: -2px 2px var(--pink), 2px -2px var(--neon); }
+            100% { text-shadow: 2px 2px var(--pink), -2px -2px var(--neon); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">NURMEDIA</div>
+    </div>
+
+    <div class="tabs" id="tabs">
+        <div class="tab active" onclick="filter('Barchasi', this)">All Stream</div>
+    </div>
+
+    <div class="container">
+        <div class="grid" id="movieGrid"></div>
+    </div>
+
+    <div id="modal">
+        <div class="video-box">
+            <span class="close-btn" onclick="closeM()">[ CLOSE ]</span>
+            <iframe id="player" width="100%" height="100%" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        const movies = {
+            "ACTION": [
+                { t: "JOHN WICK 4", v: "qEVUrkHu32E", s: "⚡" },
+                { t: "EXTRACTION 2", v: "Y274jZs5s7s", s: "💀" },
+                { t: "TOP GUN 2", v: "giXcoGaXegM", s: "🦅" },
+                { t: "FAST X", v: "32RAq6JzY-w", s: "🔥" },
+                { t: "BEEKEEPER", v: "SzINZZ6iqTY", s: "🐝" },
+                { t: "MISSION 7", v: "avz06PDqDbM", s: "🔋" },
+                { t: "RAMBO 5", v: "IAqLKlxY3Yw", s: "🏹" },
+                { t: "GLADIATOR 2", v: "pL_B_C8fN9M", s: "⚔️" },
+                { t: "DEADPOOL 3", v: "73_1biulkYk", s: "🔴" },
+                { t: "THE MATRIX", v: "m8e-FF8MsqU", s: "🕶️" }
+            ],
+            "SCIFI": [
+                { t: "AVATAR 2", v: "d9MyW72ELq0", s: "💧" },
+                { t: "INTERSTELLAR", v: "zSWdZVtXT7E", s: "🌌" },
+                { t: "DUNE 2", v: "Way9Dexny3w", s: "🏜️" },
+                { t: "STAR WARS", v: "8Qn_vitNrKg", s: "🛰️" },
+                { t: "INCEPTION", v: "YoHD9XEInc0", s: "🌀" },
+                { t: "DOCTOR STRANGE", v: "aWzlQ2N6qqg", s: "👁️" },
+                { t: "SPIDER-VERSE", v: "shW9i6k8cB0", s: "🕸️" },
+                { t: "GUARDIANS 3", v: "2LIQ2-PZBC8", s: "🦝" },
+                { t: "TRANSFORMERS", v: "itnqEauWQZM", s: "🤖" },
+                { t: "BLACK PANTHER", v: "RlOB3UXO32M", s: "🐾" }
+            ],
+            "HORROR": [
+                { t: "THE NUN 2", v: "QF-oyCwaArU", s: "✝️" },
+                { t: "SMILE", v: "BcDK7lk7voI", s: "🤡" },
+                { t: "EVIL DEAD", v: "smTK_AeAPHs", s: "🧟" },
+                { t: "SCREAM 6", v: "beToTslH17s", s: "👻" },
+                { t: "IT", v: "FnCdOQsX5kc", s: "🎈" },
+                { t: "INSIDIOUS", v: "ZuQUat2S0-k", s: "🏚️" },
+                { t: "SAW X", v: "t3PzUo4P21c", s: "⚙️" },
+                { t: "HALLOWEEN", v: "ek1ePFp-nBI", s: "🎃" },
+                { t: "M3GAN", v: "BRb4U99OU80", s: "🪆" },
+                { t: "CONJURING", v: "k10ETZ41q5o", s: "🕯️" }
+            ],
+            "COMEDY": [
+                { t: "BARBIE", v: "pBk4NYhWNMM", s: "💎" },
+                { t: "FREE GUY", v: "X2m-08cMT0E", s: "🕹️" },
+                { t: "TED", v: "9fneWv0G2I", s: "🧸" },
+                { t: "BAD BOYS 4", v: "hRFY_Fesa9Q", s: "🚔" },
+                { t: "HOME ALONE", v: "jEDaVIWscTk", s: "🎄" },
+                { t: "RUSH HOUR", v: "JMiFsFQ6168", s: "🥢" },
+                { t: "KUNG FU PANDA", v: "_uS_pA7_z7E", s: "🥟" },
+                { t: "MINIONS", v: "6H7m_01pC3M", s: "🍌" },
+                { t: "THE MASK", v: "LZl69yk5lQk", s: "🟢" },
+                { t: "SUPER MARIO", v: "TnGl01FkMMo", s: "🍄" }
+            ]
+        };
+
+        const grid = document.getElementById('movieGrid');
+        const tabs = document.getElementById('tabs');
+
+        // Render Tabs
+        Object.keys(movies).forEach(cat => {
+            const t = document.createElement('div');
+            t.className = 'tab';
+            t.innerText = cat;
+            t.onclick = () => filter(cat, t);
+            tabs.appendChild(t);
+        });
+
+        function filter(cat, el) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            
+            let data = [];
+            if(cat === 'Barchasi') {
+                Object.keys(movies).forEach(c => data.push(...movies[c]));
+            } else {
+                data = movies[cat];
+            }
+            
+            grid.innerHTML = data.map(m => `
+                <div class="movie-card" onclick="openM('${m.v}')">
+                    <div class="play-overlay"><i class="fas fa-expand"></i></div>
+                    <div class="sticker-wrapper">${m.s}</div>
+                    <div class="movie-info">
+                        <div class="movie-title">${m.t}</div>
+                        <div class="movie-cat">${cat} // ULTRA HD</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openM(v) {
+            document.getElementById('player').src = `https://www.youtube.com/embed/${v}?autoplay=1`;
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function closeM() {
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('player').src = "";
+        }
+
+        filter('Barchasi', document.querySelector('.tab'));
+
+    </script>
+</body>
+</html>
